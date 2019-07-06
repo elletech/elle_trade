@@ -1,11 +1,13 @@
 <template>
-  <div>
+  <v-app id="app">
     <form>
       <v-text-field
         v-model="accountBalance"
         :error-messages="nameErrors"
         label="口座残高"
         required
+        return-masked-value
+        mask="###,###"
       ></v-text-field>
       <v-text-field
         v-model="email"
@@ -36,7 +38,7 @@
       <v-btn @click="submit">submit</v-btn>
       <v-btn @click="clear">clear</v-btn>
     </form>
-  </div>
+  </v-app>
 </template>
 
 <script>
