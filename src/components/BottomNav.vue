@@ -1,4 +1,5 @@
 <template>
+<v-app id="app">
   <div id="bottom-nav" >
     <v-card height="100%" flat >
         <v-bottom-nav
@@ -37,6 +38,7 @@
         </v-bottom-nav>
     </v-card>
   </div>
+</v-app>
 </template>
 
 <script>
