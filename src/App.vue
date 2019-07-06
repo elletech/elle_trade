@@ -2,14 +2,18 @@
   <div id="app">
     <Navigation />
     <router-view/>
+    <BottomNav />
   </div>
 </template>
 <script>
 import Navigation from "@/components/Navigation.vue";
+import BottomNav from "@/components/BottomNav.vue";
+
 export default {
   name: "home",
   components: {
-    Navigation
+    Navigation,
+    BottomNav
   }
 };
 </script>
