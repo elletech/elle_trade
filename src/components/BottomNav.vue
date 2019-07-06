@@ -12,17 +12,18 @@
             flat
             value="recent"
         >
-            <span>Recent</span>
+            <span>History</span>
             <v-icon>history</v-icon>
         </v-btn>
 
         <v-btn
+            to="CreateTrade"
             color="teal"
             flat
             value="favorites"
         >
-            <span>Favorites</span>
-            <v-icon>favorite</v-icon>
+            <span>Add</span>
+            <v-icon>fas fa-plus-circle</v-icon>
         </v-btn>
 
         <v-btn
@@ -42,7 +43,7 @@
   export default {
     data () {
       return {
-        bottomNav: 'recent'
+        bottomNav: 'history'
       }
     }
   }
