@@ -16,6 +16,7 @@ export default {
     BottomNav
   }
 };
+
 </script>
 <style>
 #app {
