@@ -17,6 +17,41 @@
             required
             v-money="money"
           ></v-text-field>
+          <v-select
+            v-model="pointer"
+            :items="pointers"
+            :error-messages="selectErrors"
+            label="指標"
+            required
+          ></v-select>
+          <v-select
+            v-model="currencyPair"
+            :items="currencyPairs"
+            :error-messages="selectErrors"
+            label="通貨ペア"
+            required
+          ></v-select>
+          <v-select
+            v-model="candlestick"
+            :items="candlesticks"
+            :error-messages="selectErrors"
+            label="ローソク足"
+            required
+          ></v-select>
+          <v-select
+            v-model="trend"
+            :items="trends"
+            :error-messages="selectErrors"
+            label="トレンド"
+            required
+          ></v-select>
+          <v-select
+            v-model="howToTrade"
+            :items="howToTrades"
+            :error-messages="selectErrors"
+            label="取引手法"
+            required
+          ></v-select>
           <!-- <v-text-field
             v-model="email"
             :error-messages="emailErrors"
@@ -25,15 +60,7 @@
             @input="$v.email.$touch()"
             @blur="$v.email.$touch()"
           ></v-text-field>
-          <v-select
-            v-model="select"
-            :items="items"
-            :error-messages="selectErrors"
-            label="Item"
-            required
-            @change="$v.select.$touch()"
-            @blur="$v.select.$touch()"
-          ></v-select>
+          
           <v-checkbox
             v-model="checkbox"
             :error-messages="checkboxErrors"
@@ -42,7 +69,18 @@
             @change="$v.checkbox.$touch()"
             @blur="$v.checkbox.$touch()"
           ></v-checkbox> -->
-        
+
+          <!-- <v-subheader>Tick labels</v-subheader>
+          <v-card-text>
+            <v-slider
+              v-model="fruits"
+              :tick-labels="ticksLabels"
+              :max="15"
+              step="1"
+              ticks="always"
+              tick-size="2"
+            ></v-slider>
+          </v-card-text> -->
           <v-btn @click="createTrade">submit</v-btn>
           <v-btn @click="clear">clear</v-btn>
         </v-form>
@@ -97,12 +135,44 @@
 
     data: () => ({
       accountBalance: '',
-      select: null,
-      items: [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4'
+      pointer: 'ボリンジャーバンド',
+      currencyPair: 'USD/JPY',
+      howToTrade: '順張り',
+      candlestick: '15m',
+      pointers: [
+        'ボリンジャーバンド',
+        '20日移動平均線'
+      ],
+      currencyPairs: [
+        'USD/JPY',
+        'EUR/JPY',
+        'EUR/USD'
+      ],
+      trends: [
+        '上昇トレンド',
+        '下降トレンド'
+      ],
+      howToTrades: [
+        '順張り',
+        '逆張り'
+      ],
+      candlesticks: [
+        '5s',
+        '10s',
+        '30s',
+        '1m',
+        '2m',
+        '5m',
+        '10m',
+        '15m',
+        '30m',
+        '1h',
+        '3h',
+        '4h',
+        '8h',
+        'D',
+        'W',
+        'M'
       ],
       money: {
         decimal: ",",
@@ -125,8 +195,8 @@
       },
       selectErrors () {
         const errors = []
-        if (!this.$v.select.$dirty) return errors
-        !this.$v.select.required && errors.push('Item is required')
+        //if (!this.$v.select.$dirty) return errors
+        //!this.$v.select.required && errors.push('Item is required')
         return errors
       },
       nameErrors () {
@@ -145,13 +215,10 @@
       }
     },
     methods: {
-      submit () {
-        this.$v.$touch()
-      },
       clear () {
         this.$v.$reset()
         this.name = ''
-        this.email = ''
+        this.entryStandard = ''
         this.select = null
         this.checkbox = false
       },
@@ -162,7 +229,9 @@
 
         // 保存用JSONデータを作成
         const saveData = {
+            userUID: this.$store.getters.user.uid,
             accountBalance: intAccountBalance,
+            entryStandard: this.entryStandard,
             createdAt: new Date()
         };
         

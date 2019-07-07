@@ -2,9 +2,11 @@
     <div id="nav">
       <nav class="navbar is-transparent" v-bind:class="{'is-fixed-bottom':menuPosition}">
         <div class="navbar-brand">
-          <router-link class="navbar-item" to="/">
-            <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
-          </router-link>
+          <div style="height: 80px;">
+            <router-link class="navbar-item" to="/">
+              <svg width="100%" height="100%" viewBox="0 0 600 250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><g transform="matrix(0.892826,0,0,0.892826,-87.0311,38.4465)"><text x="127.181px" y="149.385px" style="font-family:'Phi-Caps-Thin-Condensed', 'Phi Caps Thin Condensed';font-weight:100;font-stretch:condensed;font-size:150px;">ELLE <tspan x="421.102px 482.479px 540.926px 609.774px 676.425px " y="149.385px 149.385px 149.385px 149.385px 149.385px ">TRADE</tspan></text></g></svg>
+            </router-link>
+          </div>
           <div class="navbar-burger burger " v-bind:class="{ 'is-active': menuActive }" v-on:click="menuToggle()" data-target="navbarExampleTransparentExample">
             <span></span>
             <span></span>
