@@ -18,6 +18,13 @@
             v-money="money"
           ></v-text-field>
           <v-select
+            v-model="maxLossPercent"
+            :items="maxLossPercents"
+            :error-messages="selectErrors"
+            label="最大損失パーセント"
+            required
+          ></v-select>
+          <v-select
             v-model="pointer"
             :items="pointers"
             :error-messages="selectErrors"
@@ -52,15 +59,62 @@
             label="取引手法"
             required
           ></v-select>
-          <!-- <v-text-field
-            v-model="email"
-            :error-messages="emailErrors"
-            label="E-mail"
-            required
-            @input="$v.email.$touch()"
-            @blur="$v.email.$touch()"
-          ></v-text-field>
-          
+          <!-- エントリー日付 -->
+          <v-dialog
+            ref="entryDateDialog"
+            v-model="entryDateModal"
+            :return-value.sync="entryDate"
+            persistent
+            lazy
+            full-width
+            width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="entryDate"
+                label="エントリー日付"
+                prepend-icon="event"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="entryDate" scrollable>
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" @click="entryDateModal = false">Cancel</v-btn>
+              <v-btn flat color="primary" @click="$refs.entryDateDialog.save(entryDate)">OK</v-btn>
+            </v-date-picker>
+          </v-dialog>
+          <!-- エントリー時間 -->
+          <v-dialog
+            ref="entryTimeDialog"
+            v-model="entryTimeModal"
+            :return-value.sync="entryTime"
+            persistent
+            lazy
+            full-width
+            width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="entryTime"
+                label="エントリー時間"
+                prepend-icon="access_time"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="entryTimeModal"
+              v-model="entryTime"
+              format="24hr"
+              full-width
+            >
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" @click="entryTimeModal = false">Cancel</v-btn>
+              <v-btn flat color="primary" @click="$refs.entryTimeDialog.save(entryTime)">OK</v-btn>
+            </v-time-picker>
+          </v-dialog>
+          <!--
           <v-checkbox
             v-model="checkbox"
             :error-messages="checkboxErrors"
@@ -139,6 +193,12 @@
       currencyPair: 'USD/JPY',
       howToTrade: '順張り',
       candlestick: '15m',
+      trend: '',
+      entryDate: new Date().toISOString().substr(0, 10),
+      entryTime: '',
+      entryDateModal: false,
+      entryTimeModal: false, 
+      maxLossPercent: '2',
       pointers: [
         'ボリンジャーバンド',
         '20日移動平均線'
@@ -173,6 +233,17 @@
         'D',
         'W',
         'M'
+      ],
+      maxLossPercents: [
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10'
       ],
       money: {
         decimal: ",",
@@ -218,7 +289,7 @@
       clear () {
         this.$v.$reset()
         this.name = ''
-        this.entryStandard = ''
+        this.pointer = ''
         this.select = null
         this.checkbox = false
       },
@@ -230,8 +301,14 @@
         // 保存用JSONデータを作成
         const saveData = {
             userUID: this.$store.getters.user.uid,
-            accountBalance: intAccountBalance,
-            entryStandard: this.entryStandard,
+            accountBalance: intAccountBalance, //口座残高
+            pointer: this.pointer, //指標
+            currencyPair: this.currencyPair, //通貨ペア
+            candlestick: this.candlestick, //ローソク足
+            trend: this.trend, //トレンド
+            howToTrade: this.howToTrade, //取引手法
+            entryDate: this.entryDate, //エントリー日付
+            entryTime: this.entryTime, //エントリー時間
             createdAt: new Date()
         };
         

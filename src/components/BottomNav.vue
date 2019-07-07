@@ -54,10 +54,10 @@
 <style scoped>
  /* BottomNavを固定CSS */
  #bottom-nav {
-      width: 100%;
-      background: #4499cc;
-      position: fixed;
-      bottom: 0;
-      z-index:999;
-    } 
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index:999;
+  } 
+  
 </style>
