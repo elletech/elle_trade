@@ -3,11 +3,9 @@
     <form>
       <v-text-field
         v-model="accountBalance"
-        :error-messages="nameErrors"
         label="口座残高"
         required
-        return-masked-value
-        mask="###,###"
+        v-money="money"
       ></v-text-field>
       <v-text-field
         v-model="email"
@@ -44,6 +42,7 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
+  import { VMoney } from "v-money"
 
   export default {
     mixins: [validationMixin],
@@ -60,7 +59,7 @@
     },
 
     data: () => ({
-      name: '',
+      accountBalance: '',
       email: '',
       select: null,
       items: [
@@ -69,9 +68,18 @@
         'Item 3',
         'Item 4'
       ],
+      money: {
+        decimal: ",",
+        prefix: "",
+        suffix: " 円 ",
+        masked: false, // doesn't work with directive
+        allowBlank: true,
+        precision: 3,
+        // Also bugged that this is not clearable
+        // https://github.com/vuejs-tips/v-money/issues/44
+      },
       checkbox: false
     }),
-
     computed: {
       checkboxErrors () {
         const errors = []
@@ -111,6 +119,11 @@
         this.email = ''
         this.select = null
         this.checkbox = false
+      },
+      trimNumber: function(val){
+        var regExp = /[0-9０-９]+/;
+        var matchResult = val.match(regExp);
+        return matchResult === null ? '' : matchResult[0];
       }
     }
   }
