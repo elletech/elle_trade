@@ -1,41 +1,75 @@
 <template>
   <v-app id="app">
-    <form>
-      <v-text-field
-        v-model="accountBalance"
-        label="口座残高"
-        required
-        v-money="money"
-      ></v-text-field>
-      <v-text-field
-        v-model="email"
-        :error-messages="emailErrors"
-        label="E-mail"
-        required
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
-      ></v-text-field>
-      <v-select
-        v-model="select"
-        :items="items"
-        :error-messages="selectErrors"
-        label="Item"
-        required
-        @change="$v.select.$touch()"
-        @blur="$v.select.$touch()"
-      ></v-select>
-      <v-checkbox
-        v-model="checkbox"
-        :error-messages="checkboxErrors"
-        label="Do you agree?"
-        required
-        @change="$v.checkbox.$touch()"
-        @blur="$v.checkbox.$touch()"
-      ></v-checkbox>
+    <v-container grid-list-xl>
+    <v-layout
+      wrap
+      justify-space-between
+      justify-center
+    >
+      <v-flex
+        xs12
+        md4
+      >
+          <v-form ref="form">
+          <v-text-field
+            v-model="accountBalance"
+            label="口座残高"
+            required
+            v-money="money"
+          ></v-text-field>
+          <!-- <v-text-field
+            v-model="email"
+            :error-messages="emailErrors"
+            label="E-mail"
+            required
+            @input="$v.email.$touch()"
+            @blur="$v.email.$touch()"
+          ></v-text-field>
+          <v-select
+            v-model="select"
+            :items="items"
+            :error-messages="selectErrors"
+            label="Item"
+            required
+            @change="$v.select.$touch()"
+            @blur="$v.select.$touch()"
+          ></v-select>
+          <v-checkbox
+            v-model="checkbox"
+            :error-messages="checkboxErrors"
+            label="Do you agree?"
+            required
+            @change="$v.checkbox.$touch()"
+            @blur="$v.checkbox.$touch()"
+          ></v-checkbox> -->
+        
+          <v-btn @click="createTrade">submit</v-btn>
+          <v-btn @click="clear">clear</v-btn>
+        </v-form>
+      </v-flex>
+      <v-flex
+        xs12
+        md6
+      >
+      <!-- <v-slider
+          v-model="max"
+          label="Max characters"
+        >
+        </v-slider>
 
-      <v-btn @click="submit">submit</v-btn>
-      <v-btn @click="clear">clear</v-btn>
-    </form>
+        <v-checkbox
+          v-model="allowSpaces"
+          label="Allow spaces"
+        ></v-checkbox>
+
+        <v-text-field
+          v-model="match"
+          label="Value must match"
+        ></v-text-field> -->
+        
+      </v-flex>
+    </v-layout>
+  </v-container>
   </v-app>
 </template>
 
@@ -43,6 +77,9 @@
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
   import { VMoney } from "v-money"
+  // Vue CLIで作成したアプリでは、@マークは./srcを指す
+  import firebase from 'firebase';
+  import 'firebase/firestore';
 
   export default {
     mixins: [validationMixin],
@@ -60,7 +97,6 @@
 
     data: () => ({
       accountBalance: '',
-      email: '',
       select: null,
       items: [
         'Item 1',
@@ -108,7 +144,6 @@
         return errors
       }
     },
-
     methods: {
       submit () {
         this.$v.$touch()
@@ -120,10 +155,25 @@
         this.select = null
         this.checkbox = false
       },
-      trimNumber: function(val){
-        var regExp = /[0-9０-９]+/;
-        var matchResult = val.match(regExp);
-        return matchResult === null ? '' : matchResult[0];
+      createTrade(){
+        const tradesRef = firebase.firestore().collection("trades"); // "trades"という名前のコレクションへの参照を作成
+        //口座残高のカンマと円を取り除く
+        const intAccountBalance= this.accountBalance.replace(/[^0-9]/g, '');
+
+        // 保存用JSONデータを作成
+        const saveData = {
+            accountBalance: intAccountBalance,
+            createdAt: new Date()
+        };
+        
+        // addの引数に保存したいデータを渡す
+        tradesRef.add(saveData).then(function(tradesRef) {
+              // 正常にデータ保存できた時の処理
+              console.log("Document written with ID: ", tradesRef.id);
+          }).catch(function(error) {
+              // エラー発生時の処理
+              console.error("Error adding document: ", error);
+          })
       }
     }
   }
