@@ -24,6 +24,11 @@
             label="最大損失パーセント"
             required
           ></v-select>
+          <v-text-field
+            v-model="calcMaxLossMoney"
+            label="最大損失可能額"
+            readonly
+          ></v-text-field>
           <v-select
             v-model="pointer"
             :items="pointers"
@@ -188,7 +193,7 @@
     },
 
     data: () => ({
-      accountBalance: '',
+      accountBalance: '0',
       pointer: 'ボリンジャーバンド',
       currencyPair: 'USD/JPY',
       howToTrade: '順張り',
@@ -251,7 +256,17 @@
         suffix: " 円 ",
         masked: false, // doesn't work with directive
         allowBlank: true,
-        precision: 3,
+        precision: 0,
+        // Also bugged that this is not clearable
+        // https://github.com/vuejs-tips/v-money/issues/44
+      },
+      money2: {
+        decimal: ",",
+        prefix: "",
+        suffix: " 円 ",
+        masked: false, // doesn't work with directive
+        allowBlank: true,
+        precision: 0,
         // Also bugged that this is not clearable
         // https://github.com/vuejs-tips/v-money/issues/44
       },
@@ -283,6 +298,11 @@
         !this.$v.email.email && errors.push('Must be valid e-mail')
         !this.$v.email.required && errors.push('E-mail is required')
         return errors
+      },
+      calcMaxLossMoney() {
+        const result = this.accountBalance.replace(/[^0-9]/g, '') * this.maxLossPercent / 100;
+        const Roundresult = Math.round(Number(result))
+        return Roundresult.toLocaleString() + ' 円';
       }
     },
     methods: {
