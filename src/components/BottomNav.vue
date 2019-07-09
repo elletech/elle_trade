@@ -28,6 +28,7 @@
         </v-btn>
 
         <v-btn
+            to="MonthlyPips"
             color="teal"
             flat
             value="nearby"

@@ -11,6 +11,12 @@
         md4
       >
           <v-form ref="form">
+          <v-select
+            v-model="orderType"
+            :items="orderTypes"
+            label="注文種類"
+            required
+          ></v-select>
           <v-text-field
             v-model="accountBalance"
             label="口座残高"
@@ -193,6 +199,7 @@
     },
 
     data: () => ({
+      orderType: 'LONG',
       accountBalance: '0',
       pointer: 'ボリンジャーバンド',
       currencyPair: 'USD/JPY',
@@ -204,6 +211,10 @@
       entryDateModal: false,
       entryTimeModal: false, 
       maxLossPercent: '2',
+      orderTypes: [
+        'LONG',
+        'SHORT'
+      ],
       pointers: [
         'ボリンジャーバンド',
         '20日移動平均線'
@@ -327,6 +338,7 @@
             candlestick: this.candlestick, //ローソク足
             trend: this.trend, //トレンド
             howToTrade: this.howToTrade, //取引手法
+            // TODO 日付はyear month day に分けてDB保存
             entryDate: this.entryDate, //エントリー日付
             entryTime: this.entryTime, //エントリー時間
             createdAt: new Date()

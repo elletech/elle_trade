@@ -11,7 +11,6 @@ const config = {
     appId: "1:760639918983:web:30c04ca4bf42e6bc"
 }
 
-const firebaseApp = Firebase.initializeApp(config, 'exercise-vue')
 const firestore = firebaseApp.firestore()
 
 export default firestore

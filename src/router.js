@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import CreateTrade from './views/CreateTrade.vue'
+import MonthlyPips from './views/MonthlyPips.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/createTrade',
       name: 'createTrade',
       component: CreateTrade
+    },
+    {
+      path: '/monthlyPips',
+      name: 'MonthlyPips',
+      component: MonthlyPips
     }
   ]
 })
